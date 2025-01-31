@@ -36,4 +36,14 @@ public class ExpenseService {
                 })
                 .orElseThrow(() ->new RuntimeException("Exception not found with id " + id));
     }
+    public List<Expense> getExpensesByMonth(int month,int year){
+        return expenseRepository.findByMonthAndYear(month,year);
+    }
+
+    public List<Expense> getExpenseByCategory(String category) {
+        return expenseRepository.findByCategory(category);
+    }
+    public double getTotalExpenseByMonth(int month,int year){
+        return expenseRepository.calculateTotalByMonth(month,year);
+    }
 }

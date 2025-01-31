@@ -42,4 +42,19 @@ public class ExpenseController {
         Expense expense = expenseService.updateExpense(id,updatedExpense);
         return new ResponseEntity<>(expense, HttpStatus.OK);
     }
+    @GetMapping("/by-month")
+    public ResponseEntity<List<Expense>> getExpenseByMonth(@RequestParam int month,@RequestParam int year){
+        List<Expense> expense = expenseService.getExpensesByMonth(month,year);
+        return new ResponseEntity<>(expense,HttpStatus.OK);
+    }
+    @GetMapping("/by-category")
+    public ResponseEntity<List<Expense>> getByCategory(@RequestParam String category){
+        List<Expense> expenses = expenseService.getExpenseByCategory(category);
+        return new ResponseEntity<>(expenses,HttpStatus.OK);
+    }
+    @GetMapping("/total-by-month")
+    public ResponseEntity<Double> totalExpenseByMonth(@RequestParam int month,@RequestParam int year){
+        double totalExpense = expenseService.getTotalExpenseByMonth(month,year  );
+        return new ResponseEntity<>(totalExpense,HttpStatus.OK);
+    }
 }
