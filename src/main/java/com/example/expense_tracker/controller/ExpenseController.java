@@ -6,7 +6,6 @@ import com.example.expense_tracker.service.ExpenseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -23,9 +22,16 @@ public class ExpenseController {
     public ResponseEntity<AuthResponse> saveExpense(@RequestBody Expense expense) {
         try {
             Expense savedExpense = expenseService.saveExpense(expense);
-            return new ResponseEntity<>(new AuthResponse(true, savedExpense), HttpStatus.CREATED);
+            AuthResponse response = new AuthResponse();
+            response.setSuccess(true);
+            response.setMessage("Expense saved successfully");
+            response.setData(savedExpense);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (IllegalStateException e) {
-            return new ResponseEntity<>(new AuthResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
+            AuthResponse response = new AuthResponse();
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -33,9 +39,16 @@ public class ExpenseController {
     public ResponseEntity<AuthResponse> getAllExpenses() {
         try {
             List<Expense> expenses = expenseService.getAllExpenses();
-            return new ResponseEntity<>(new AuthResponse(true, expenses), HttpStatus.OK);
+            AuthResponse response = new AuthResponse();
+            response.setSuccess(true);
+            response.setMessage("Expenses retrieved successfully");
+            response.setData(expenses);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalStateException e) {
-            return new ResponseEntity<>(new AuthResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
+            AuthResponse response = new AuthResponse();
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -43,10 +56,24 @@ public class ExpenseController {
     public ResponseEntity<AuthResponse> getExpenseById(@PathVariable Long id) {
         try {
             return expenseService.getExpenseById(id)
-                    .map(expense -> new ResponseEntity<>(new AuthResponse(true, expense), HttpStatus.OK))
-                    .orElseGet(() -> new ResponseEntity<>(new AuthResponse("Expense not found with id " + id), HttpStatus.NOT_FOUND));
+                    .map(expense -> {
+                        AuthResponse response = new AuthResponse();
+                        response.setSuccess(true);
+                        response.setMessage("Expense found");
+                        response.setData(expense);
+                        return new ResponseEntity<>(response, HttpStatus.OK);
+                    })
+                    .orElseGet(() -> {
+                        AuthResponse response = new AuthResponse();
+                        response.setSuccess(false);
+                        response.setMessage("Expense not found with id " + id);
+                        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+                    });
         } catch (IllegalStateException e) {
-            return new ResponseEntity<>(new AuthResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
+            AuthResponse response = new AuthResponse();
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -54,9 +81,15 @@ public class ExpenseController {
     public ResponseEntity<AuthResponse> deleteExpenseById(@PathVariable Long id) {
         try {
             expenseService.deleteExpenseById(id);
-            return new ResponseEntity<>(new AuthResponse(true, null), HttpStatus.NO_CONTENT);
+            AuthResponse response = new AuthResponse();
+            response.setSuccess(true);
+            response.setMessage("Expense deleted successfully");
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalStateException e) {
-            return new ResponseEntity<>(new AuthResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
+            AuthResponse response = new AuthResponse();
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -64,11 +97,21 @@ public class ExpenseController {
     public ResponseEntity<AuthResponse> updateExpense(@PathVariable Long id, @RequestBody Expense updatedExpense) {
         try {
             Expense expense = expenseService.updateExpense(id, updatedExpense);
-            return new ResponseEntity<>(new AuthResponse(true, expense), HttpStatus.OK);
+            AuthResponse response = new AuthResponse();
+            response.setSuccess(true);
+            response.setMessage("Expense updated successfully");
+            response.setData(expense);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalStateException e) {
-            return new ResponseEntity<>(new AuthResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
+            AuthResponse response = new AuthResponse();
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         } catch (RuntimeException e) {
-            return new ResponseEntity<>(new AuthResponse(e.getMessage()), HttpStatus.NOT_FOUND);
+            AuthResponse response = new AuthResponse();
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -76,9 +119,16 @@ public class ExpenseController {
     public ResponseEntity<AuthResponse> getExpenseByMonth(@RequestParam int month, @RequestParam int year) {
         try {
             List<Expense> expenses = expenseService.getExpensesByMonth(month, year);
-            return new ResponseEntity<>(new AuthResponse(true, expenses), HttpStatus.OK);
+            AuthResponse response = new AuthResponse();
+            response.setSuccess(true);
+            response.setMessage("Monthly expenses retrieved successfully");
+            response.setData(expenses);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalStateException e) {
-            return new ResponseEntity<>(new AuthResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
+            AuthResponse response = new AuthResponse();
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -86,9 +136,16 @@ public class ExpenseController {
     public ResponseEntity<AuthResponse> getByCategory(@RequestParam String category) {
         try {
             List<Expense> expenses = expenseService.getExpenseByCategory(category);
-            return new ResponseEntity<>(new AuthResponse(true, expenses), HttpStatus.OK);
+            AuthResponse response = new AuthResponse();
+            response.setSuccess(true);
+            response.setMessage("Category expenses retrieved successfully");
+            response.setData(expenses);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalStateException e) {
-            return new ResponseEntity<>(new AuthResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
+            AuthResponse response = new AuthResponse();
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -96,9 +153,16 @@ public class ExpenseController {
     public ResponseEntity<AuthResponse> totalExpenseByMonth(@RequestParam int month, @RequestParam int year) {
         try {
             double totalExpense = expenseService.getTotalExpenseByMonth(month, year);
-            return new ResponseEntity<>(new AuthResponse(true, totalExpense), HttpStatus.OK);
+            AuthResponse response = new AuthResponse();
+            response.setSuccess(true);
+            response.setMessage("Total monthly expense calculated successfully");
+            response.setData(totalExpense);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (IllegalStateException e) {
-            return new ResponseEntity<>(new AuthResponse(e.getMessage()), HttpStatus.UNAUTHORIZED);
+            AuthResponse response = new AuthResponse();
+            response.setSuccess(false);
+            response.setMessage(e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
     }
 }

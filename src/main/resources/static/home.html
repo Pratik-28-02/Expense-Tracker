@@ -3,378 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense Tracker</title>
+    <title>Simple Expense Tracker</title>
     <style>
-        :root {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #1a1a1a;
-            --purple-primary: #8b5cf6;
-            --purple-dark: #6d28d9;
-            --purple-light: #a78bfa;
-            --text-primary: #ffffff;
-            --text-secondary: #9ca3af;
-            --border-color: #2d2d2d;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            min-height: 100vh;
-        }
-
-        nav {
-            background-color: var(--bg-secondary);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1rem 0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 1rem;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .nav-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 3rem;
+        h1, h2 {
+            color: #333;
+            text-align: center;
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--purple-light);
+        .auth-section, .expense-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
 
-        .auth-container {
-            max-width: 480px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background-color: var(--bg-secondary);
-            border-radius: 1rem;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .form-group {
+            margin-bottom: 15px;
         }
 
-        .tab-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .tab-button {
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-        }
-
-        .tab-button.active {
-            background-color: var(--purple-primary);
-            color: white;
-        }
-
-        .tab-button:not(.active) {
-            background-color: var(--bg-primary);
-            color: var(--text-secondary);
-        }
-
-        .input-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .input-label {
+        label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-secondary);
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            border: 1px solid var(--border-color);
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-        }
-
-        .input-field:focus {
-            outline: none;
-            border-color: var(--purple-primary);
-            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
-        }
-
-        .button {
-            width: 100%;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            border: none;
-            background-color: var(--purple-primary);
-            color: white;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .button:hover {
-            background-color: var(--purple-dark);
-        }
-
-        .dashboard {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .card {
-            background-color: var(--bg-secondary);
-            border-radius: 1rem;
-            border: 1px solid var(--border-color);
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: var(--purple-light);
-        }
-
-        .stat-card {
-            background-color: var(--bg-primary);
-            padding: 1rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .stat-label {
-            color: var(--text-secondary);
-        }
-
-        .stat-value {
-            font-size: 1.5rem;
+            margin-bottom: 5px;
             font-weight: bold;
-            color: var(--purple-light);
         }
 
-        table {
+        input, select, button {
             width: 100%;
-            border-collapse: collapse;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
         }
 
-        th {
-            background-color: var(--bg-primary);
-            padding: 1rem;
-            text-align: left;
-            color: var(--text-secondary);
-        }
-
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .action-button {
-            background: none;
+        button {
+            background-color: #007bff;
+            color: white;
             border: none;
-            color: var(--purple-light);
             cursor: pointer;
-            transition: color 0.3s ease;
+            margin-top: 10px;
         }
 
-        .action-button:hover {
-            color: var(--purple-primary);
+        button:hover {
+            background-color: #0056b3;
         }
 
-        .delete-button {
-            color: #ef4444;
+        .btn-danger {
+            background-color: #dc3545;
         }
 
-        .delete-button:hover {
-            color: #dc2626;
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #545b62;
         }
 
         .hidden {
             display: none;
         }
 
+        .expense-list {
+            margin-top: 20px;
+        }
+
+        .expense-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+
+        .expense-item h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+
+        .expense-info {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .expense-actions {
+            margin-top: 10px;
+        }
+
+        .expense-actions button {
+            width: auto;
+            margin-right: 10px;
+            padding: 5px 15px;
+        }
+
+        .message {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            min-width: 150px;
+            margin: 5px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
         @media (max-width: 768px) {
-            .grid {
-                grid-template-columns: 1fr;
+            .expense-info {
+                flex-direction: column;
+            }
+
+            .stats {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
-<nav>
-    <div class="container">
-        <div class="nav-content">
-            <h1 class="logo">Expense Tracker</h1>
-            <div id="userNav" class="hidden">
-                <span style="color: var(--text-secondary)">Welcome, User!</span>
-                <button onclick="logout()" class="button" style="width: auto; margin-left: 1rem; background-color: #ef4444;">
-                    Logout
-                </button>
+<div class="container">
+    <h1>Simple Expense Tracker</h1>
+
+    <!-- Authentication Section -->
+    <div id="auth-section" class="auth-section">
+        <h2>Login / Register</h2>
+        <div id="message-area"></div>
+
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" placeholder="Enter username">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Enter password">
+        </div>
+
+        <button onclick="login()">Login</button>
+        <button onclick="register()" class="btn-secondary">Register</button>
+    </div>
+
+    <!-- Main Application Section -->
+    <div id="app-section" class="hidden">
+        <div class="auth-section">
+            <h2>Welcome, <span id="current-user"></span>!</h2>
+            <button onclick="logout()" class="btn-danger">Logout</button>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats">
+            <div class="stat-card">
+                <div>Total Expenses</div>
+                <div class="stat-number" id="total-expenses">$0</div>
+            </div>
+            <div class="stat-card">
+                <div>This Month</div>
+                <div class="stat-number" id="month-expenses">$0</div>
+            </div>
+            <div class="stat-card">
+                <div>Total Items</div>
+                <div class="stat-number" id="total-items">0</div>
             </div>
         </div>
-    </div>
-</nav>
 
-<div id="loginForm" class="auth-container">
-    <div class="tab-buttons">
-        <button id="loginTab" onclick="switchTab('login')" class="tab-button active">Login</button>
-        <button id="registerTab" onclick="switchTab('register')" class="tab-button">Register</button>
-    </div>
+        <!-- Add Expense Section -->
+        <div class="expense-section">
+            <h2>Add New Expense</h2>
+            <div id="expense-message-area"></div>
 
-    <div id="loginFields">
-        <div class="input-group">
-            <label class="input-label">Username</label>
-            <input type="text" class="input-field">
-        </div>
-        <div class="input-group">
-            <label class="input-label">Password</label>
-            <input type="password" class="input-field">
-        </div>
-        <button onclick="login()" class="button">Login</button>
-    </div>
+            <div class="form-group">
+                <label for="expense-name">Expense Name:</label>
+                <input type="text" id="expense-name" placeholder="Enter expense name">
+            </div>
 
-    <div id="registerFields" class="hidden">
-        <div class="input-group">
-            <label class="input-label">Username</label>
-            <input type="text" class="input-field">
+            <div class="form-group">
+                <label for="expense-amount">Amount:</label>
+                <input type="number" id="expense-amount" step="0.01" placeholder="Enter amount">
+            </div>
+
+            <div class="form-group">
+                <label for="expense-category">Category:</label>
+                <select id="expense-category">
+                    <option value="">Select Category</option>
+                    <option value="food">Food</option>
+                    <option value="transport">Transport</option>
+                    <option value="utilities">Utilities</option>
+                    <option value="entertainment">Entertainment</option>
+                    <option value="shopping">Shopping</option>
+                    <option value="healthcare">Healthcare</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="expense-date">Date:</label>
+                <input type="date" id="expense-date">
+            </div>
+
+            <button onclick="addExpense()">Add Expense</button>
         </div>
-        <div class="input-group">
-            <label class="input-label">Password</label>
-            <input type="password" class="input-field">
+
+        <!-- Expense List Section -->
+        <div class="expense-section">
+            <h2>Your Expenses</h2>
+            <button onclick="loadExpenses()">Refresh List</button>
+            <div class="expense-list" id="expense-list">
+                <!-- Expenses will be loaded here -->
+            </div>
         </div>
-        <div class="input-group">
-            <label class="input-label">Confirm Password</label>
-            <input type="password" class="input-field">
-        </div>
-        <button onclick="register()" class="button">Register</button>
     </div>
 </div>
 
-<div id="dashboard" class="hidden dashboard">
-    <div class="grid">
-        <!-- Add Expense Card -->
-        <div class="card">
-            <h2 class="card-title">Add New Expense</h2>
-            <form onsubmit="addExpense(event)">
-                <div class="input-group">
-                    <input type="text" placeholder="Expense Name" class="input-field">
-                </div>
-                <div class="input-group">
-                    <input type="number" placeholder="Amount" class="input-field">
-                </div>
-                <div class="input-group">
-                    <select class="input-field">
-                        <option value="">Select Category</option>
-                        <option value="food">Food</option>
-                        <option value="transport">Transport</option>
-                        <option value="utilities">Utilities</option>
-                        <option value="entertainment">Entertainment</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <input type="date" class="input-field">
-                </div>
-                <button type="submit" class="button">Add Expense</button>
-            </form>
-        </div>
-
-        <!-- Monthly Summary Card -->
-        <div class="card">
-            <h2 class="card-title">Monthly Summary</h2>
-            <div class="stat-card">
-                <div class="stat-label">Total Expenses</div>
-                <div class="stat-value">$1,234</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Food</div>
-                <div class="stat-value">$400</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Transport</div>
-                <div class="stat-value">$200</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Utilities</div>
-                <div class="stat-value">$300</div>
-            </div>
-        </div>
-
-        <!-- Quick Actions Card -->
-        <div class="card">
-            <h2 class="card-title">Quick Actions</h2>
-            <button class="button" style="margin-bottom: 1rem;">View All Expenses</button>
-            <button class="button" style="margin-bottom: 1rem;">Monthly Report</button>
-            <button class="button">Category Analysis</button>
-        </div>
-    </div>
-
-    <!-- Recent Expenses Table -->
-    <div class="card">
-        <h2 class="card-title">Recent Expenses</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>Date</th>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Amount</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>2024-02-12</td>
-                <td>Groceries</td>
-                <td>Food</td>
-                <td>$85.50</td>
-                <td>
-                    <button class="action-button">Edit</button>
-                    <button class="action-button delete-button">Delete</button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<!-- Add this script section just before the closing </body> tag in your home.html -->
 <script>
-    async function register() {
-        const username = document.querySelector('#registerFields input[type="text"]').value;
-        const password = document.querySelector('#registerFields input[type="password"]').value;
-        const confirmPassword = document.querySelector('#registerFields input[type="password"]:last-child').value;
+    let currentUser = '';
+    let currentAuth = '';
 
-        if (password !== confirmPassword) {
-            alert('Passwords do not match!');
+    // Set today's date as default
+    document.getElementById('expense-date').valueAsDate = new Date();
+
+    function showMessage(elementId, message, isError = false) {
+        const element = document.getElementById(elementId);
+        element.innerHTML = `<div class="message ${isError ? 'error' : 'success'}">${message}</div>`;
+        setTimeout(() => {
+            element.innerHTML = '';
+        }, 3000);
+    }
+
+    function createAuthHeader(username, password) {
+        return 'Basic ' + btoa(username + ':' + password);
+    }
+
+    async function register() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        if (!username || !password) {
+            showMessage('message-area', 'Please enter username and password', true);
             return;
         }
 
         try {
-            const response = await fetch('/register', {
+            const response = await fetch('/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -382,150 +299,187 @@
                 body: JSON.stringify({ username, password })
             });
 
-            if (response.ok) {
-                alert('Registration successful! Please login.');
-                switchTab('login');
+            const data = await response.json();
+
+            if (data.success) {
+                showMessage('message-area', 'Registration successful! Please login.');
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
             } else {
-                const error = await response.text();
-                alert(error || 'Registration failed!');
+                showMessage('message-area', data.message, true);
             }
         } catch (error) {
-            console.error('Error:', error);
-            alert('Registration failed!');
+            showMessage('message-area', 'Registration failed: ' + error.message, true);
         }
     }
 
     async function login() {
-        const username = document.querySelector('#loginFields input[type="text"]').value;
-        const password = document.querySelector('#loginFields input[type="password"]').value;
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        if (!username || !password) {
+            showMessage('message-area', 'Please enter username and password', true);
+            return;
+        }
+
+        currentAuth = createAuthHeader(username, password);
 
         try {
-            const response = await fetch('/login', {
-                method: 'POST',
+            const response = await fetch('/api/users/profile', {
                 headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ username, password })
+                    'Authorization': currentAuth
+                }
             });
 
             if (response.ok) {
-                document.getElementById('loginForm').classList.add('hidden');
-                document.getElementById('dashboard').classList.remove('hidden');
-                document.getElementById('userNav').classList.remove('hidden');
-                document.querySelector('#userNav span').textContent = `Welcome, ${username}!`;
+                const data = await response.json();
+                currentUser = username;
+                document.getElementById('current-user').textContent = username;
+                document.getElementById('auth-section').classList.add('hidden');
+                document.getElementById('app-section').classList.remove('hidden');
                 loadExpenses();
             } else {
-                const error = await response.text();
-                alert(error || 'Login failed!');
+                showMessage('message-area', 'Login failed. Please check your credentials.', true);
             }
         } catch (error) {
-            console.error('Error:', error);
-            alert('Login failed!');
+            showMessage('message-area', 'Login failed: ' + error.message, true);
         }
     }
 
-    async function addExpense(event) {
-        event.preventDefault();
-        const form = event.target;
-        const expense = {
-            name: form.querySelector('input[placeholder="Expense Name"]').value,
-            amount: parseFloat(form.querySelector('input[placeholder="Amount"]').value),
-            category: form.querySelector('select').value,
-            date: form.querySelector('input[type="date"]').value
-        };
+    function logout() {
+        currentUser = '';
+        currentAuth = '';
+        document.getElementById('auth-section').classList.remove('hidden');
+        document.getElementById('app-section').classList.add('hidden');
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('expense-list').innerHTML = '';
+    }
+
+    async function addExpense() {
+        const name = document.getElementById('expense-name').value;
+        const amount = parseFloat(document.getElementById('expense-amount').value);
+        const category = document.getElementById('expense-category').value;
+        const date = document.getElementById('expense-date').value;
+
+        if (!name || !amount || !category || !date) {
+            showMessage('expense-message-area', 'Please fill in all fields', true);
+            return;
+        }
 
         try {
             const response = await fetch('/api/expenses', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': currentAuth
                 },
-                body: JSON.stringify(expense)
+                body: JSON.stringify({ name, amount, category, date })
             });
 
-            if (response.ok) {
-                form.reset();
+            const data = await response.json();
+
+            if (data.success) {
+                showMessage('expense-message-area', 'Expense added successfully!');
+                // Clear form
+                document.getElementById('expense-name').value = '';
+                document.getElementById('expense-amount').value = '';
+                document.getElementById('expense-category').value = '';
+                document.getElementById('expense-date').valueAsDate = new Date();
                 loadExpenses();
             } else {
-                alert('Failed to add expense!');
+                showMessage('expense-message-area', data.message, true);
             }
         } catch (error) {
-            console.error('Error:', error);
-            alert('Failed to add expense!');
+            showMessage('expense-message-area', 'Failed to add expense: ' + error.message, true);
         }
     }
 
     async function loadExpenses() {
         try {
-            const response = await fetch('/api/expenses');
-            if (response.ok) {
-                const expenses = await response.json();
-                updateExpenseTable(expenses);
-                updateMonthlySummary(expenses);
+            const response = await fetch('/api/expenses', {
+                headers: {
+                    'Authorization': currentAuth
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                displayExpenses(data.data);
+                updateStatistics(data.data);
+            } else {
+                showMessage('expense-message-area', data.message, true);
             }
         } catch (error) {
-            console.error('Error loading expenses:', error);
+            showMessage('expense-message-area', 'Failed to load expenses: ' + error.message, true);
         }
     }
 
-    function updateExpenseTable(expenses) {
-        const tbody = document.querySelector('table tbody');
-        tbody.innerHTML = expenses.map(expense => `
-            <tr>
-                <td>${expense.date}</td>
-                <td>${expense.name}</td>
-                <td>${expense.category}</td>
-                <td>$${expense.amount.toFixed(2)}</td>
-                <td>
-                    <button class="action-button" onclick="editExpense(${expense.id})">Edit</button>
-                    <button class="action-button delete-button" onclick="deleteExpense(${expense.id})">Delete</button>
-                </td>
-            </tr>
-        `).join('');
+    function displayExpenses(expenses) {
+        const expenseList = document.getElementById('expense-list');
+
+        if (!expenses || expenses.length === 0) {
+            expenseList.innerHTML = '<p>No expenses found. Add your first expense above!</p>';
+            return;
+        }
+
+        expenseList.innerHTML = expenses.map(expense => `
+                <div class="expense-item">
+                    <h4>${expense.name}</h4>
+                    <div class="expense-info">
+                        <span><strong>Amount:</strong> $${expense.amount.toFixed(2)}</span>
+                        <span><strong>Category:</strong> ${expense.category}</span>
+                        <span><strong>Date:</strong> ${expense.date}</span>
+                    </div>
+                    <div class="expense-actions">
+                        <button onclick="deleteExpense(${expense.id})" class="btn-danger">Delete</button>
+                    </div>
+                </div>
+            `).join('');
     }
 
-    function updateMonthlySummary(expenses) {
-        const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
-        document.querySelector('.stat-value').textContent = `$${totalExpenses.toFixed(2)}`;
+    function updateStatistics(expenses) {
+        const total = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+        const currentMonth = new Date().getMonth() + 1;
+        const currentYear = new Date().getFullYear();
+        const monthTotal = expenses
+            .filter(expense => {
+                const expenseDate = new Date(expense.date);
+                return expenseDate.getMonth() + 1 === currentMonth &&
+                    expenseDate.getFullYear() === currentYear;
+            })
+            .reduce((sum, expense) => sum + expense.amount, 0);
 
-        // Update category totals
-        const categoryTotals = expenses.reduce((acc, exp) => {
-            acc[exp.category] = (acc[exp.category] || 0) + exp.amount;
-            return acc;
-        }, {});
-
-        Object.entries(categoryTotals).forEach(([category, total]) => {
-            const element = document.querySelector(`.stat-card:contains('${category}') .stat-value`);
-            if (element) {
-                element.textContent = `$${total.toFixed(2)}`;
-            }
-        });
+        document.getElementById('total-expenses').textContent = `$${total.toFixed(2)}`;
+        document.getElementById('month-expenses').textContent = `$${monthTotal.toFixed(2)}`;
+        document.getElementById('total-items').textContent = expenses.length;
     }
 
     async function deleteExpense(id) {
-        if (!confirm('Are you sure you want to delete this expense?')) return;
+        if (!confirm('Are you sure you want to delete this expense?')) {
+            return;
+        }
 
         try {
             const response = await fetch(`/api/expenses/${id}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: {
+                    'Authorization': currentAuth
+                }
             });
 
-            if (response.ok) {
+            const data = await response.json();
+
+            if (data.success) {
+                showMessage('expense-message-area', 'Expense deleted successfully!');
                 loadExpenses();
             } else {
-                alert('Failed to delete expense!');
+                showMessage('expense-message-area', data.message, true);
             }
         } catch (error) {
-            console.error('Error:', error);
-            alert('Failed to delete expense!');
+            showMessage('expense-message-area', 'Failed to delete expense: ' + error.message, true);
         }
-    }
-
-    function logout() {
-        document.getElementById('loginForm').classList.remove('hidden');
-        document.getElementById('dashboard').classList.add('hidden');
-        document.getElementById('userNav').classList.add('hidden');
-        // Clear any stored data or state
     }
 </script>
 </body>
