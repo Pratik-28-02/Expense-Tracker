@@ -2,7 +2,7 @@ package com.example.expense_tracker.service;
 
 import com.example.expense_tracker.dto.AuthResponse;
 import com.example.expense_tracker.dto.RegistrationRequest;
-import com.example.expense_tracker.service.UserService;
+import com.example.expense_tracker.config.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,6 +23,9 @@ public class AuthController {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> registerUser(@RequestBody RegistrationRequest request) {
@@ -42,7 +46,13 @@ public class AuthController {
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            return ResponseEntity.ok(new AuthResponse("Login successful!", true));
+            // Generate JWT
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String jwt = jwtUtil.generateToken(userDetails);
+
+            AuthResponse response = new AuthResponse("Login successful!", true);
+            response.setData(jwt); // Include JWT in the response
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new AuthResponse("Invalid credentials!", false));
