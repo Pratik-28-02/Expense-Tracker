@@ -264,7 +264,7 @@
 
 <script>
     let currentUser = '';
-    let currentAuth = '';
+    let jwtToken = '';
 
     // Set today's date as default
     document.getElementById('expense-date').valueAsDate = new Date();
@@ -277,10 +277,6 @@
         }, 3000);
     }
 
-    function createAuthHeader(username, password) {
-        return 'Basic ' + btoa(username + ':' + password);
-    }
-
     async function register() {
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
@@ -291,7 +287,7 @@
         }
 
         try {
-            const response = await fetch('/api/auth/register', {
+            const response = await fetch('http://localhost:8080/api/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -322,24 +318,29 @@
             return;
         }
 
-        currentAuth = createAuthHeader(username, password);
-
         try {
-            const response = await fetch('/api/users/profile', {
+            const response = await fetch('http://localhost:8080/api/auth/login', {
+                method: 'POST',
                 headers: {
-                    'Authorization': currentAuth
-                }
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
             });
 
-            if (response.ok) {
-                const data = await response.json();
+            const data = await response.json();
+
+            if (data.success) {
+                jwtToken = data.data; // Store the JWT token
                 currentUser = username;
+                localStorage.setItem('jwtToken', jwtToken);
+                localStorage.setItem('username', username);
+
                 document.getElementById('current-user').textContent = username;
                 document.getElementById('auth-section').classList.add('hidden');
                 document.getElementById('app-section').classList.remove('hidden');
                 loadExpenses();
             } else {
-                showMessage('message-area', 'Login failed. Please check your credentials.', true);
+                showMessage('message-area', data.message || 'Login failed', true);
             }
         } catch (error) {
             showMessage('message-area', 'Login failed: ' + error.message, true);
@@ -348,7 +349,9 @@
 
     function logout() {
         currentUser = '';
-        currentAuth = '';
+        jwtToken = '';
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('username');
         document.getElementById('auth-section').classList.remove('hidden');
         document.getElementById('app-section').classList.add('hidden');
         document.getElementById('username').value = '';
@@ -368,11 +371,11 @@
         }
 
         try {
-            const response = await fetch('/api/expenses', {
+            const response = await fetch('http://localhost:8080/api/expenses', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': currentAuth
+                    'Authorization': `Bearer ${jwtToken}`
                 },
                 body: JSON.stringify({ name, amount, category, date })
             });
@@ -397,9 +400,9 @@
 
     async function loadExpenses() {
         try {
-            const response = await fetch('/api/expenses', {
+            const response = await fetch('http://localhost:8080/api/expenses', {
                 headers: {
-                    'Authorization': currentAuth
+                    'Authorization': `Bearer ${jwtToken}`
                 }
             });
 
@@ -424,19 +427,22 @@
             return;
         }
 
+        // Sort expenses by date (most recent first)
+        expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+
         expenseList.innerHTML = expenses.map(expense => `
-                <div class="expense-item">
-                    <h4>${expense.name}</h4>
-                    <div class="expense-info">
-                        <span><strong>Amount:</strong> $${expense.amount.toFixed(2)}</span>
-                        <span><strong>Category:</strong> ${expense.category}</span>
-                        <span><strong>Date:</strong> ${expense.date}</span>
-                    </div>
-                    <div class="expense-actions">
-                        <button onclick="deleteExpense(${expense.id})" class="btn-danger">Delete</button>
-                    </div>
+            <div class="expense-item">
+                <h4>${expense.name}</h4>
+                <div class="expense-info">
+                    <span><strong>Amount:</strong> $${expense.amount.toFixed(2)}</span>
+                    <span><strong>Category:</strong> ${expense.category}</span>
+                    <span><strong>Date:</strong> ${expense.date}</span>
                 </div>
-            `).join('');
+                <div class="expense-actions">
+                    <button onclick="deleteExpense(${expense.id})" class="btn-danger">Delete</button>
+                </div>
+            </div>
+        `).join('');
     }
 
     function updateStatistics(expenses) {
@@ -462,10 +468,10 @@
         }
 
         try {
-            const response = await fetch(`/api/expenses/${id}`, {
+            const response = await fetch(`http://localhost:8080/api/expenses/${id}`, {
                 method: 'DELETE',
                 headers: {
-                    'Authorization': currentAuth
+                    'Authorization': `Bearer ${jwtToken}`
                 }
             });
 
@@ -481,6 +487,21 @@
             showMessage('expense-message-area', 'Failed to delete expense: ' + error.message, true);
         }
     }
+
+    // Check if user is already logged in
+    window.onload = function() {
+        const savedToken = localStorage.getItem('jwtToken');
+        const savedUsername = localStorage.getItem('username');
+
+        if (savedToken && savedUsername) {
+            jwtToken = savedToken;
+            currentUser = savedUsername;
+            document.getElementById('current-user').textContent = savedUsername;
+            document.getElementById('auth-section').classList.add('hidden');
+            document.getElementById('app-section').classList.remove('hidden');
+            loadExpenses();
+        }
+    };
 </script>
 </body>
 </html>
